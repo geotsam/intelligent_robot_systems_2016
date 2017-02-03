@@ -73,6 +73,18 @@ class RobotController:
       # Check what laser_scan contains and create linear and angular speeds
       # for obstacle avoidance
 
+      leng = len(scan)
+      max_dist = 8
+
+      forw_dist = scan[leng/2]
+      linear = (max_dist - forw_dist) / max_dist 
+
+      max_value = max(scan)
+      max_index = scan.index(max_value)
+      angular = float(max_index - leng/2) / (leng/2)
+
+      linear=0.3 - 0.3 * linear
+      angular=0.3 * angular
       ##########################################################################
       return [linear, angular]
 
@@ -108,12 +120,18 @@ class RobotController:
         ############################### NOTE QUESTION ############################
         # You must combine the two sets of speeds. You can use motor schema,
         # subsumption of whatever suits your better.
+        self.linear_velocity=0.9*l_goal+0.1*l_laser
+        self.angular_velocity=0.9*a_goal+0.1*a_laser
 
         ##########################################################################
       else:
         ############################### NOTE QUESTION ############################
         # Implement obstacle avoidance here using the laser speeds.
         # Hint: Subtract them from something constant
+
+        self.linear_velocity  = l_laser
+
+        self.angular_velocity = a_laser
         pass
         ##########################################################################
 

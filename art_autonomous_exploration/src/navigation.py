@@ -99,16 +99,25 @@ class Navigation:
         # What if a later subtarget or the end has been reached before the 
         # next subtarget? Alter the code accordingly.
         # Check if distance is less than 7 px (14 cm)
+        i2=self.next_subtarget+1
+        while i2<len(self.subtargets):
+            if math.hypot(rx - self.subtargets[i2][0], ry - self.subtargets[i2][1]) < dist:
+                self.next_subtarget += 1
+                self.counter_to_next_sub = self.count_limit
+                dist = math.hypot(rx - self.subtargets[i2][0], ry - self.subtargets[i2][1])
+            i2+=1
+
+
         if dist < 5:
           self.next_subtarget += 1
           self.counter_to_next_sub = self.count_limit
           # Check if the final subtarget has been approached
-          if self.next_subtarget == len(self.subtargets):
+          if self.next_subtarget >= len(self.subtargets):
             self.target_exists = False
         ########################################################################
         
         # Publish the current target
-        if self.next_subtarget == len(self.subtargets):
+        if self.next_subtarget >= len(self.subtargets):
             return
 
         subtarget = [\
@@ -230,7 +239,9 @@ class Navigation:
           # Fill the ps.pose.position values to show the path in RViz
           # You must understand what self.robot_perception.resolution
           # and self.robot_perception.origin are.
-        
+          ps.pose.position.x=p[0]*self.robot_perception.resolution+self.robot_perception.origin['x']
+          ps.pose.position.y=p[1]*self.robot_perception.resolution+self.robot_perception.origin['y'] 
+          print ps.pose.position.x
           ########################################################################
           ros_path.poses.append(ps)
         self.path_publisher.publish(ros_path)
@@ -281,7 +292,14 @@ class Navigation:
             st_y = self.subtargets[self.next_subtarget][1]
             
         ######################### NOTE: QUESTION  ##############################
+            phi = math.atan2((st_y-ry),(st_x-rx))-theta
+            d = pow(pow(st_y-ry,2) + pow(st_x-rx,2),0.5)
+
+            angular = 0.6*math.atan(5*phi)/math.pi
+            linear=0.3-abs(angular)
+            
 
         return [linear, angular]
+
 
     
