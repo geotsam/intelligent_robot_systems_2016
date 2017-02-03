@@ -241,7 +241,6 @@ class Navigation:
           # and self.robot_perception.origin are.
           ps.pose.position.x=p[0]*self.robot_perception.resolution+self.robot_perception.origin['x']
           ps.pose.position.y=p[1]*self.robot_perception.resolution+self.robot_perception.origin['y'] 
-          print ps.pose.position.x
           ########################################################################
           ros_path.poses.append(ps)
         self.path_publisher.publish(ros_path)
@@ -292,11 +291,11 @@ class Navigation:
             st_y = self.subtargets[self.next_subtarget][1]
             
         ######################### NOTE: QUESTION  ##############################
-            phi = math.atan2((st_y-ry),(st_x-rx))-theta
-            d = pow(pow(st_y-ry,2) + pow(st_x-rx,2),0.5)
+            phi = math.atan2((st_y-ry),(st_x-rx))-theta #angle error
+            d = pow(pow(st_y-ry,2) + pow(st_x-rx,2),0.5) #distance from target
 
             angular = 0.6*math.atan(5*phi)/math.pi
-            linear=0.3-abs(angular)
+            linear=pow(0.3-abs(angular),2)
             
 
         return [linear, angular]

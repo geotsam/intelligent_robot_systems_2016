@@ -83,8 +83,8 @@ class RobotController:
       max_index = scan.index(max_value)
       angular = float(max_index - leng/2) / (leng/2)
 
-      linear=0.3 - 0.3 * linear
-      angular=0.3 * angular
+      linear = 0.3 - 0.3 * linear
+      angular= 0.3 * angular
       ##########################################################################
       return [linear, angular]
 
@@ -120,8 +120,8 @@ class RobotController:
         ############################### NOTE QUESTION ############################
         # You must combine the two sets of speeds. You can use motor schema,
         # subsumption of whatever suits your better.
-        self.linear_velocity=0.9*l_goal+0.1*l_laser
-        self.angular_velocity=0.9*a_goal+0.1*a_laser
+        self.linear_velocity= (0.7* l_goal + 0.3 * l_laser)*0.99 + 0.003
+        self.angular_velocity= 0.6 * a_goal + 0.4 * a_laser
 
         ##########################################################################
       else:
